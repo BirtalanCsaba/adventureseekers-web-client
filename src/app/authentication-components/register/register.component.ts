@@ -2,9 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User } from 'src/app/common/entity/user.entity';
+import { EmailValidators } from 'src/app/common/validation/email.validators';
 import { PasswordValidators } from 'src/app/common/validation/password.validators';
+import { UsernameValidators } from 'src/app/common/validation/username.validators';
 import { AuthService } from 'src/app/services/auth.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'register',
@@ -18,12 +21,18 @@ export class RegisterComponent implements OnInit {
     [
       Validators.required,
       Validators.email
+    ],
+    [
+      EmailValidators.shouldByUnique(this.userService)
     ]),
     username: new FormControl('',
     [
       Validators.required,
       Validators.minLength(5),
       Validators.maxLength(30)
+    ],
+    [
+      UsernameValidators.shouldByUnique(this.userService)
     ]),
     firstname: new FormControl('',
     [
@@ -85,7 +94,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private toastr: NotificationService) { }
+    private toastr: NotificationService,
+    private userService: UserService) { }
 
   ngOnInit(): void {
   }

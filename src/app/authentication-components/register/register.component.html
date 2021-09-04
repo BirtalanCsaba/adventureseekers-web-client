@@ -26,6 +26,7 @@
                                 class="invalid-feedback">
                                 <div *ngIf="email?.errors?.required">Email is required</div>
                                 <div *ngIf="email?.errors?.email">Must be a valid email</div>
+                                <div *ngIf="email?.errors?.shouldByUnique">Email already taken</div>
                             </div>
                         </div>
                         <div class="form-floating mb-3">
@@ -50,6 +51,7 @@
                                 <div *ngIf="username?.errors?.maxlength">
                                     Username must have at most {{username?.errors?.maxlength.requiredLength}} characters
                                 </div>
+                                <div *ngIf="username?.errors?.shouldByUnique">Username already taken</div>
                             </div>
                         </div>
                         <div class="form-floating mb-3">

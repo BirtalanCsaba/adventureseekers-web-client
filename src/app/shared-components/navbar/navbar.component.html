@@ -48,9 +48,12 @@
                         aria-expanded="false">
                         Hello, {{authService.currentUser.sub}}
                     </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
                         <li>
-                            <button class="dropdown-item" type="button">
+                            <button 
+                                class="dropdown-item" 
+                                type="button"
+                                routerLink="/profile">
                                 <i class="fa fa-user" aria-hidden="true"></i>
                                 Profile
                             </button>

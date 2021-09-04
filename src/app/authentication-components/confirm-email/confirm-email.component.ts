@@ -40,7 +40,6 @@ export class ConfirmEmailComponent implements OnInit {
               throw error;
             } 
           });
-          
       });
   }
 
@@ -54,6 +53,7 @@ export class ConfirmEmailComponent implements OnInit {
         if (error.status !== 400) {
           throw error;
         }
+        this.router.navigate(['/login']);
       });
   }
 

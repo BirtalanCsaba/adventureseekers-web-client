@@ -7,7 +7,6 @@ import { NavbarComponent } from './shared-components/navbar/navbar.component';
 import { FooterComponent } from './shared-components/footer/footer.component';
 import { HomeComponent } from './home/home.component';
 import { RouterModule } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,6 +17,9 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { ConfirmEmailComponent } from './authentication-components/confirm-email/confirm-email.component';
 import { ConfirmEmailNotificationComponent } from './authentication-components/confirm-email-notification/confirm-email-notification.component';
 import { ErrorPageComponent } from './shared-components/error-page/error-page.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
+import { AuthGuard } from './services/guards/auth-guard.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,8 @@ import { ErrorPageComponent } from './shared-components/error-page/error-page.co
     LoginComponent,
     RegisterComponent,
     ConfirmEmailComponent,
-    ConfirmEmailNotificationComponent
+    ConfirmEmailNotificationComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -48,6 +51,11 @@ import { ErrorPageComponent } from './shared-components/error-page/error-page.co
       { path: 'register', component: RegisterComponent },
       { path: 'confirm/:token', component: ConfirmEmailComponent },
       { path: 'confirm-notification', component: ConfirmEmailNotificationComponent },
+      { 
+        path: 'profile', 
+        component: UserProfileComponent,
+        canActivate: [AuthGuard]
+      },
       { path: '**', component: ErrorPageComponent },
     ]),
     

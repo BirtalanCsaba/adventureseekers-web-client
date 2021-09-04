@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelper, tokenNotExpired } from 'angular2-jwt';
 import { catchError } from 'rxjs/operators';
@@ -90,8 +90,12 @@ export class AuthService {
    * @param token The token to be confirmed
    */
   confirmToken(token: string) {
-    return this.http.post(
-      this.API_URL + "/api/users/confirmation/" + token, null
+    let httpParams = new HttpParams().append("token", token);
+    return this.http.get(
+      this.API_URL + "/api/users/confirmation",
+      {
+        params: httpParams
+      }
     )
     .pipe(map((response: any) => {
       let result = response;
@@ -105,8 +109,12 @@ export class AuthService {
   }
 
   resendToken(email: string) {
-    return this.http.post(
-      this.API_URL + "/api/users/resend/" + email, null
+    let httpParams = new HttpParams().append("email", email);
+    return this.http.get(
+      this.API_URL + "/api/users/resend", 
+      {
+        params: httpParams
+      }
     ).pipe(catchError(error => {
       console.log(error);
       throw error;
