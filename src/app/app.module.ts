@@ -20,6 +20,7 @@ import { ErrorPageComponent } from './shared-components/error-page/error-page.co
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { AuthGuard } from './services/guards/auth-guard.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UserAccountManageComponent } from './user-account-manage/user-account-manage.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     RegisterComponent,
     ConfirmEmailComponent,
     ConfirmEmailNotificationComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    UserAccountManageComponent
   ],
   imports: [
     BrowserModule,

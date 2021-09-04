@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User } from 'src/app/common/entity/user.entity';
 import { EmailValidators } from 'src/app/common/validation/email.validators';
+import { GlobalValidators } from 'src/app/common/validation/global.validators';
 import { PasswordValidators } from 'src/app/common/validation/password.validators';
 import { UsernameValidators } from 'src/app/common/validation/username.validators';
 import { AuthService } from 'src/app/services/auth.service';
@@ -19,8 +20,9 @@ export class RegisterComponent implements OnInit {
   registrationForm = new FormGroup({
     email: new FormControl('', 
     [
+      GlobalValidators.cannotContainSpace,
       Validators.required,
-      Validators.email
+      Validators.email,
     ],
     [
       EmailValidators.shouldByUnique(this.userService)
@@ -29,7 +31,8 @@ export class RegisterComponent implements OnInit {
     [
       Validators.required,
       Validators.minLength(5),
-      Validators.maxLength(30)
+      Validators.maxLength(30),
+      GlobalValidators.cannotContainSpace
     ],
     [
       UsernameValidators.shouldByUnique(this.userService)
@@ -37,26 +40,31 @@ export class RegisterComponent implements OnInit {
     firstname: new FormControl('',
     [
       Validators.required,
-      Validators.maxLength(30)
+      Validators.maxLength(30),
+      GlobalValidators.shouldNotStartOrEndWithWhitespace
     ]),
     lastname: new FormControl('',
     [
       Validators.required,
-      Validators.maxLength(30)
+      Validators.maxLength(30),
+      GlobalValidators.shouldNotStartOrEndWithWhitespace
     ]),
     password: new FormControl('',
     [
       Validators.required,
       Validators.minLength(5),
-      Validators.maxLength(50)
+      Validators.maxLength(50),
+      GlobalValidators.cannotContainSpace
     ]),
     confirmpassword: new FormControl('',
     [
-      Validators.required
+      Validators.required,
+      GlobalValidators.cannotContainSpace
     ]),
     birthdate: new FormControl(new Date(), 
     [
-      Validators.required
+      Validators.required,
+      GlobalValidators.shouldNotStartOrEndWithWhitespace,
     ])
   },
   [
