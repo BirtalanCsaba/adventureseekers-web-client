@@ -17,10 +17,17 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { ConfirmEmailComponent } from './authentication-components/confirm-email/confirm-email.component';
 import { ConfirmEmailNotificationComponent } from './authentication-components/confirm-email-notification/confirm-email-notification.component';
 import { ErrorPageComponent } from './shared-components/error-page/error-page.component';
-import { UserProfileComponent } from './user-profile/user-profile.component';
+import { UserProfileComponent } from './account/settings/user-profile/user-profile.component';
 import { AuthGuard } from './services/guards/auth-guard.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { UserAccountManageComponent } from './user-account-manage/user-account-manage.component';
+import { UserManageComponent } from './account/user-manage/user-manage.component';
+import { MyAccountComponent } from './account/settings/my-account/my-account.component';
+import { SecurityComponent } from './account/settings/security/security.component';
+import { EmailNotificationsComponent } from './account/settings/email-notifications/email-notifications.component';
+import { CookiesComponent } from './account/settings/cookies/cookies.component';
+import { LanguageComponent } from './account/settings/language/language.component';
+import { AddsComponent } from './account/settings/adds/adds.component';
+import { SupportComponent } from './account/settings/support/support.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +40,12 @@ import { UserAccountManageComponent } from './user-account-manage/user-account-m
     ConfirmEmailComponent,
     ConfirmEmailNotificationComponent,
     UserProfileComponent,
-    UserAccountManageComponent
+    SecurityComponent,
+    UserManageComponent,
+    EmailNotificationsComponent,
+    CookiesComponent,
+    LanguageComponent,
+    SupportComponent,
   ],
   imports: [
     BrowserModule,
@@ -53,6 +65,41 @@ import { UserAccountManageComponent } from './user-account-manage/user-account-m
       { path: 'register', component: RegisterComponent },
       { path: 'confirm/:token', component: ConfirmEmailComponent },
       { path: 'confirm-notification', component: ConfirmEmailNotificationComponent },
+      { 
+        path: 'settings/account', 
+        component: UserManageComponent,
+        canActivate: [AuthGuard],
+        children:[
+          {
+            path: '',
+            component: MyAccountComponent
+          },
+          {
+            path: 'security',
+            component: SecurityComponent
+          },
+          {
+            path: 'email-notifications',
+            component: EmailNotificationsComponent
+          },
+          {
+            path: 'cookies',
+            component: CookiesComponent
+          },
+          {
+            path: 'language',
+            component: LanguageComponent
+          },
+          {
+            path: 'adds',
+            component: AddsComponent
+          },
+          {
+            path: 'support',
+            component: SupportComponent
+          }
+        ]
+      },
       { 
         path: 'profile', 
         component: UserProfileComponent,

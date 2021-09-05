@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { JwtHelper, tokenNotExpired } from 'angular2-jwt';
 import { catchError } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
@@ -12,7 +13,9 @@ import { User } from '../common/entity/user.entity';
 export class AuthService {
   private API_URL = environment.API_URL;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private router: Router) { }
 
   /**
    * Logging in with the given credentials.
@@ -43,6 +46,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
+    this.router.navigate(["/"]);
   }
 
   /**
