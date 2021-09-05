@@ -5,5 +5,9 @@
 
 html {
     margin-bottom: 100px;
-    margin-top: 70px;
+    margin-top: 90px;
+}
+
+body {
+    background-color: #F0F1F2;
 }
