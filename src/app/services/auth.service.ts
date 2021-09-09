@@ -1,11 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { JwtHelper, tokenNotExpired } from 'angular2-jwt';
 import { catchError } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from '../common/entity/user.entity';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { TokenHelper } from './local-storage/token.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private router: Router) { }
+    private router: Router,
+    private jwtHelper: JwtHelperService) { }
 
   /**
    * Logging in with the given credentials.
@@ -24,7 +26,7 @@ export class AuthService {
    * @returns True on successful login, otherwise false.
    */
   login(credentials: any) {
-    return this.http.post(this.API_URL + '/login', 
+    return this.http.post(this.API_URL + '/api/auth/login', 
       JSON.stringify(credentials))
       .pipe(map((response: any) => {
         let result = response;
@@ -44,8 +46,8 @@ export class AuthService {
    * Loggs out the user by deleting the access tokens.
    */
   logout() {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
+    TokenHelper.removeAccessToken();
+    TokenHelper.removeRefreshToken();
     this.router.navigate(["/"]);
   }
 
@@ -54,17 +56,17 @@ export class AuthService {
    * @returns True if the user is logged in, otherwise false.
    */
   isLoggedIn() {
-    return tokenNotExpired("access_token");
+    return !this.jwtHelper.isTokenExpired();
   }
 
   /**
    * Getts the current user`s username.
    */
   get currentUser() {
-    let token = localStorage.getItem('access_token');
+    let token = TokenHelper.getAccessToken();
     if (!token) return null;
 
-    return new JwtHelper().decodeToken(token);
+    return this.jwtHelper.decodeToken(token);
   }
   
   /**
@@ -73,7 +75,7 @@ export class AuthService {
    */
   register(newUser: User) {
     return this.http.post(
-      this.API_URL + "/api/users/register", 
+      this.API_URL + "/api/auth/register", 
       JSON.stringify(newUser),
       { 
         headers: {'Content-Type':'application/json; charset=utf-8'}, 
@@ -96,7 +98,7 @@ export class AuthService {
   confirmToken(token: string) {
     let httpParams = new HttpParams().append("token", token);
     return this.http.get(
-      this.API_URL + "/api/users/confirmation",
+      this.API_URL + "/api/auth/confirmation",
       {
         params: httpParams
       }
@@ -115,7 +117,7 @@ export class AuthService {
   resendToken(email: string) {
     let httpParams = new HttpParams().append("email", email);
     return this.http.get(
-      this.API_URL + "/api/users/resend", 
+      this.API_URL + "/api/auth/resend", 
       {
         params: httpParams
       }

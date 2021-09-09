@@ -80,7 +80,7 @@
                                     First Name must have at most {{firstname?.errors?.maxlength.requiredLength}} characters
                                 </div>
                                 <div *ngIf="firstname?.errors?.shouldNotStartOrEndWithWhitespace">
-                                    First Name should not contain spaces
+                                    First Name should not begin and end with space
                                 </div>
                             </div>
                         </div>
@@ -104,7 +104,7 @@
                                     Last Name must have at most {{lastname?.errors?.maxlength.requiredLength}} characters
                                 </div>
                                 <div *ngIf="lastname?.errors?.shouldNotStartOrEndWithWhitespace">
-                                    Last Name should not contain spaces
+                                    Last Name should not begin and end with space
                                 </div>
                             </div>
                         </div>
@@ -147,8 +147,12 @@
                             <div 
                                 *ngIf="confirmpassword?.touched && (confirmpassword?.invalid || registrationForm.errors?.matchPassword)" 
                                 class="invalid-feedback">
-                                <div *ngIf="confirmpassword?.errors?.required">Confirm Password is required</div>
-                                <div *ngIf="confirmpassword?.errors?.matchPassword == null">The passwords must match</div>
+                                <div *ngIf="confirmpassword?.errors?.required">
+                                    Confirm Password is required
+                                </div>
+                                <div *ngIf="confirmpassword?.errors?.matchPassword == null">
+                                    The passwords must match
+                                </div>
                             </div>
                         </div>
                         <div class="form-floating mb-3">
@@ -170,7 +174,7 @@
                                 class="invalid-feedback">
                                 <div *ngIf="birthdate?.errors?.required">Birth Date is required</div>
                                 <div *ngIf="birthdate?.errors?.shouldNotStartOrEndWithWhitespace">
-                                    Birth date should not contain spaces
+                                    Birthdate should not begin and end with space
                                 </div>
                             </div>
                         </div>

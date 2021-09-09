@@ -1,5 +1,5 @@
 <div class="row g-4">
-    <div class="col-md-3 col-sm-5">
+    <div class="col-md-3 col-sm-5 p-3">
         <div
             id="v-pills-tab" 
             class="nav nav-pills me-3 flex-column" 
@@ -103,6 +103,11 @@
             class="p-3 tab-content"
             id="v-pills-tabContent"
             role="tabpanel">
+                <div class="d-flex align-items-center">
+                    <strong>Loading...</strong>
+                    <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+                </div>
+                
                 <router-outlet></router-outlet>
         </div>
     </div>

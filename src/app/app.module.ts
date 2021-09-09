@@ -28,6 +28,8 @@ import { CookiesComponent } from './account/settings/cookies/cookies.component';
 import { LanguageComponent } from './account/settings/language/language.component';
 import { AddsComponent } from './account/settings/adds/adds.component';
 import { SupportComponent } from './account/settings/support/support.component';
+import { JwtModule } from "@auth0/angular-jwt";
+import { TokenHelper } from './services/local-storage/token.helper';
 
 @NgModule({
   declarations: [
@@ -46,6 +48,7 @@ import { SupportComponent } from './account/settings/support/support.component';
     CookiesComponent,
     LanguageComponent,
     SupportComponent,
+    MyAccountComponent,
   ],
   imports: [
     BrowserModule,
@@ -53,6 +56,13 @@ import { SupportComponent } from './account/settings/support/support.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: TokenHelper.getAccessToken,
+        allowedDomains: ['localhost:8080'],
+        skipWhenExpired: true
+      },
+    }),
     BrowserAnimationsModule,
     BsDatepickerModule.forRoot(),
     ToastrModule.forRoot({
