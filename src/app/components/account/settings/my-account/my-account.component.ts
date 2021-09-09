@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { forkJoin } from 'rxjs';
+import { UserDetail } from 'src/app/common/entity/user-detail.entity';
 import { User } from 'src/app/common/entity/user.entity';
-import { EmailValidators } from 'src/app/common/validation/email.validators';
 import { GlobalValidators } from 'src/app/common/validation/global.validators';
-import { UsernameValidators } from 'src/app/common/validation/username.validators';
 import { AuthService } from 'src/app/services/auth.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -14,14 +15,8 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class MyAccountComponent implements OnInit {
 
-  private usernameInitValue: string | undefined;
-  private emailInitValue: string | undefined;
-  private firstNameInitValue: string | undefined;
-  private lastNameInitValue: string | undefined;
-  private birthDateInitValue: string | undefined;
-  private countryInitValue: string | undefined;
-  private countyInitValue: string | undefined;
-  private cityInitValue: string | undefined;
+  private initialUser = new User();
+  private initialUserDetail = new UserDetail();
 
   settingsForm = new FormGroup({
     username: new FormControl('',
@@ -108,28 +103,97 @@ export class MyAccountComponent implements OnInit {
 
   constructor(
       private userService: UserService,
-      private authService: AuthService) { }
+      private authService: AuthService,
+      private toastr: NotificationService) { }
 
   ngOnInit(): void {
-      this.userService.getUser(this.authService.currentUser.sub)
-        .subscribe((result: any) => {
-          this.email?.patchValue(result.email);
-          this.username?.patchValue(result.userName);
-          this.firstname?.patchValue(result.firstName);
-          this.lastname?.patchValue(result.lastName);
-          this.birthdate?.patchValue(new Date(result.birthDate));
-        });
-      this.userService.getUserDetails(this.authService.currentUser.sub)
-        .subscribe((result: any) => {
-          this.country?.patchValue(result.country ? result.country : "");
-          this.county?.patchValue(result.county ? result.county : "");
-          this.city?.patchValue(result.city ? result.city : "");
-        });
+      forkJoin([
+          this.userService.getUser(this.authService.currentUser.sub),
+          this.userService.getUserDetails(this.authService.currentUser.sub)
+      ])
+      .subscribe(result => {
+        this.initialUser = result[0];
+        this.email?.patchValue(result[0].Email);
+        this.username?.patchValue(result[0].UserName);
+        this.firstname?.patchValue(result[0].FirstName);
+        this.lastname?.patchValue(result[0].LastName);
+        this.birthdate?.patchValue(result[0].BirthDate);
+
+        this.initialUserDetail = result[1];
+        this.country?.patchValue(result[1].Country ? result[1].Country : "");
+        this.county?.patchValue(result[1].County ? result[1].County : "");
+        this.city?.patchValue(result[1].City ? result[1].City : "");
+      });
   }
 
   saveSettings() {
     if (this.settingsForm.valid) {
       let userData = new User();
+      let userDetailData = new UserDetail();
+
+      let needUpdate = false;
+      if (this.initialUser.Email !== this.email?.value) {
+        userData.Email = this.email?.value;
+        this.initialUser.Email = this.email?.value;
+        needUpdate = true;
+      }
+
+      if (this.initialUser.UserName !== this.username?.value) {
+        userData.UserName = this.username?.value;
+        this.initialUser.UserName = this.username?.value;
+        needUpdate = true;
+      }
+
+      if (this.initialUser.FirstName !== this.firstname?.value) {
+        userData.FirstName = this.firstname?.value;
+        this.initialUser.FirstName = this.firstname?.value;
+        needUpdate = true;
+      }
+      
+      if (this.initialUser.LastName !== this.lastname?.value) {
+        userData.LastName = this.lastname?.value;
+        this.initialUser.LastName = this.lastname?.value;
+        needUpdate = true;
+      }
+      
+      if (this.initialUser.BirthDate !== this.birthdate?.value) {
+        userData.BirthDate = this.birthdate?.value;
+        this.initialUser.BirthDate = this.birthdate?.value;
+        needUpdate = true;
+      }
+      
+      if (this.initialUserDetail.Country !== this.country?.value) {
+        userDetailData.Country = this.country?.value;
+        this.initialUserDetail.Country = this.country?.value;
+        needUpdate = true;
+      }
+      
+      if (this.initialUserDetail.County !== this.county?.value) {
+        userDetailData.County = this.county?.value;
+        this.initialUserDetail.County = this.county?.value;
+        needUpdate = true;
+      }
+      
+      if (this.initialUserDetail.City !== this.city?.value) {
+        userDetailData.City = this.city?.value;
+        this.initialUserDetail.City = this.city?.value;
+        needUpdate = true;
+      }
+
+      if (needUpdate) {
+        forkJoin([
+          this.userService.patchUser(this.initialUser.UserName ? this.initialUser.UserName : "", userData),
+          this.userService.patchUserDetails(this.initialUser.UserName ? this.initialUser.UserName : "", userDetailData)
+        ])
+        .subscribe(response => {
+          this.toastr.showSuccess("Settings saved", "Adventure Seekers");
+        });
+      }
+      else {
+        this.toastr.showInfo("No need to update", "Adventure Seekers");
+      }
+      
+
       
     }
   }

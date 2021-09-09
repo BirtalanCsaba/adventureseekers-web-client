@@ -1,7 +1,8 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { UserDetail } from '../common/entity/user-detail.entity';
 import { User } from '../common/entity/user.entity';
 
 @Injectable({
@@ -55,7 +56,13 @@ export class UserService {
   getUser(username: string) {
     return this.http.get(this.API_URL + "/api/users/" + username)
       .pipe(map((response: any) => {
-        return response;
+        let theUser = new User();
+        theUser.Email = response.email;
+        theUser.UserName = response.userName;
+        theUser.LastName = response.lastName;
+        theUser.FirstName = response.firstName;
+        theUser.BirthDate = new Date(response.birthDate);
+        return theUser;
       }))
       .pipe(catchError(error => {
         console.log(error);
@@ -66,7 +73,12 @@ export class UserService {
   getUserDetails(username: string) {
     return this.http.get(this.API_URL + "/api/users/details/" + username)
     .pipe(map((response: any) => {
-      return response;
+      let theUserDetails = new UserDetail();
+      theUserDetails.Description = response.description;
+      theUserDetails.Country = response.country;
+      theUserDetails.County = response.county;
+      theUserDetails.City = response.city;
+      return theUserDetails;
     }))
     .pipe(catchError(error => {
       console.log(error);
@@ -74,26 +86,34 @@ export class UserService {
     }));
   }
 
-  patchUser(username: string, data: any) {
+  patchUser(username: string, data: User) {
+    console.log(JSON.stringify(data));
+    let headers = new HttpHeaders();
+    headers = headers.set('content-type', 'application/json');
     return this.http.patch(
       this.API_URL + "/api/users/" + username,
-      JSON.stringify(data))
+      JSON.stringify(data),{headers:headers})
       .pipe(map((response: any) => {
         return response;
       }))
       .pipe(catchError(error => {
+        console.log(error);
         throw error;
       }));
   }
 
-  patchUserDetails(username: string, data: any) {
+  patchUserDetails(username: string, data: UserDetail) {
+    console.log(JSON.stringify(data));
+    let headers = new HttpHeaders();
+    headers = headers.set('content-type', 'application/json');
     return this.http.patch(
       this.API_URL + "/api/users/details/" + username,
-      JSON.stringify(data))
+      JSON.stringify(data), {headers:headers})
       .pipe(map((response: any) => {
         return response;
       }))
       .pipe(catchError(error => {
+        console.log(error);
         throw error;
       }));
   }
