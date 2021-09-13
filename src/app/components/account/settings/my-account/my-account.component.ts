@@ -127,79 +127,123 @@ export class MyAccountComponent implements OnInit {
   }
 
   saveSettings() {
-    if (this.settingsForm.valid) {
-      let userData = new User();
-      let userDetailData = new UserDetail();
+    if (!this.settingsForm.valid)
+      return;
+    
+    let userData = new User();
+    let userDetailData = new UserDetail();
 
-      let needUpdate = false;
-      if (this.initialUser.Email !== this.email?.value) {
-        userData.Email = this.email?.value;
-        this.initialUser.Email = this.email?.value;
-        needUpdate = true;
-      }
+    let needUpdate = false;
+    if (this.initialUser.Email !== this.email?.value) {
+      userData.Email = this.email?.value;
+      this.initialUser.Email = this.email?.value;
+      needUpdate = true;
+    }
 
-      if (this.initialUser.UserName !== this.username?.value) {
-        userData.UserName = this.username?.value;
-        this.initialUser.UserName = this.username?.value;
-        needUpdate = true;
-      }
+    if (this.initialUser.UserName !== this.username?.value) {
+      userData.UserName = this.username?.value;
+      this.initialUser.UserName = this.username?.value;
+      needUpdate = true;
+    }
 
-      if (this.initialUser.FirstName !== this.firstname?.value) {
-        userData.FirstName = this.firstname?.value;
-        this.initialUser.FirstName = this.firstname?.value;
-        needUpdate = true;
-      }
-      
-      if (this.initialUser.LastName !== this.lastname?.value) {
-        userData.LastName = this.lastname?.value;
-        this.initialUser.LastName = this.lastname?.value;
-        needUpdate = true;
-      }
-      
-      if (this.initialUser.BirthDate !== this.birthdate?.value) {
-        userData.BirthDate = this.birthdate?.value;
-        this.initialUser.BirthDate = this.birthdate?.value;
-        needUpdate = true;
-      }
-      
-      if (this.initialUserDetail.Country !== this.country?.value) {
-        userDetailData.Country = this.country?.value;
-        this.initialUserDetail.Country = this.country?.value;
-        needUpdate = true;
-      }
-      
-      if (this.initialUserDetail.County !== this.county?.value) {
-        userDetailData.County = this.county?.value;
-        this.initialUserDetail.County = this.county?.value;
-        needUpdate = true;
-      }
-      
-      if (this.initialUserDetail.City !== this.city?.value) {
-        userDetailData.City = this.city?.value;
-        this.initialUserDetail.City = this.city?.value;
-        needUpdate = true;
-      }
+    if (this.initialUser.FirstName !== this.firstname?.value) {
+      userData.FirstName = this.firstname?.value;
+      this.initialUser.FirstName = this.firstname?.value;
+      needUpdate = true;
+    }
+    
+    if (this.initialUser.LastName !== this.lastname?.value) {
+      userData.LastName = this.lastname?.value;
+      this.initialUser.LastName = this.lastname?.value;
+      needUpdate = true;
+    }
+    
+    if (this.initialUser.BirthDate !== this.birthdate?.value) {
+      userData.BirthDate = this.birthdate?.value;
+      this.initialUser.BirthDate = this.birthdate?.value;
+      needUpdate = true;
+    }
+    
+    if (this.initialUserDetail.Country !== this.country?.value) {
+      userDetailData.Country = this.country?.value;
+      this.initialUserDetail.Country = this.country?.value;
+      needUpdate = true;
+    }
+    
+    if (this.initialUserDetail.County !== this.county?.value) {
+      userDetailData.County = this.county?.value;
+      this.initialUserDetail.County = this.county?.value;
+      needUpdate = true;
+    }
+    
+    if (this.initialUserDetail.City !== this.city?.value) {
+      userDetailData.City = this.city?.value;
+      this.initialUserDetail.City = this.city?.value;
+      needUpdate = true;
+    }
+    console.log("da");
 
-      if (needUpdate) {
+    if (needUpdate) {
+      // validate email and username: should be unique
+      if (userData.Email || userData.UserName) {
         forkJoin([
-          this.userService.patchUser(this.initialUser.UserName ? this.initialUser.UserName : "", userData),
-          this.userService.patchUserDetails(this.initialUser.UserName ? this.initialUser.UserName : "", userDetailData)
+          this.userService.existsEmail(userData.Email ? userData.Email : ""),
+          this.userService.existsUsername(userData.UserName ? userData.UserName : "")
         ])
-        .subscribe(response => {
-          this.toastr.showSuccess("Settings saved", "Adventure Seekers");
+        .subscribe(result => {
+          if (userData.Email) {
+            if (result[0]) {
+              // email already taken
+              this.email?.setErrors({
+                shouldBeUnique: true
+              });
+              this.scrollToTop();
+              return;
+            }
+          }
+          if (userData.UserName) {
+            if (result[1]) {
+              // username already taken
+              this.username?.setErrors({
+                shouldBeUnique: true
+              });
+              this.scrollToTop();
+              return;
+            }
+          }
+          this.saveUserInformation(userData, userDetailData);
         });
       }
       else {
-        this.toastr.showInfo("No need to update", "Adventure Seekers");
+        this.saveUserInformation(userData, userDetailData);
       }
-      
-
-      
     }
+    else {
+      this.toastr.showInfo("No need to update", "Adventure Seekers");
+    }
+    
   }
 
   deleteAccount() {
-    console.log("deleting account");
+    this.userService.deleteUser(this.authService.currentUser.sub)
+    .subscribe((response: any) => {
+      this.toastr.showWarning("Your account has been deleted", "Adventure Seekers");
+      this.authService.logout();
+    });
+  }
+
+  private scrollToTop() : void {
+    window.scroll(0,0);
+  }
+
+  private saveUserInformation(userData: User, userDetailData: UserDetail) {
+    forkJoin([
+      this.userService.patchUser(this.initialUser.UserName ? this.initialUser.UserName : "", userData),
+      this.userService.patchUserDetails(this.initialUser.UserName ? this.initialUser.UserName : "", userDetailData)
+    ])
+    .subscribe(response => {
+      this.toastr.showSuccess("Settings saved", "Adventure Seekers");
+    });
   }
 
 }

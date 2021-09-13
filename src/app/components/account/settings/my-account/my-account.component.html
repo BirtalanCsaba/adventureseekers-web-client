@@ -27,6 +27,9 @@
                             <div *ngIf="email?.errors?.cannotContainSpace">
                                 Email should not contain spaces
                             </div>
+                            <div *ngIf="email?.errors?.shouldBeUnique">
+                                Email already exists
+                            </div>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -51,6 +54,9 @@
                                 </div>
                                 <div *ngIf="username?.errors?.cannotContainSpace">
                                     Username should not contain spaces
+                                </div>
+                                <div *ngIf="username?.errors?.shouldBeUnique">
+                                    Username already exists
                                 </div>
                             </div>
                     </div>

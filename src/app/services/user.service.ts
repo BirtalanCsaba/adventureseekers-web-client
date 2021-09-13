@@ -87,7 +87,6 @@ export class UserService {
   }
 
   patchUser(username: string, data: User) {
-    console.log(JSON.stringify(data));
     let headers = new HttpHeaders();
     headers = headers.set('content-type', 'application/json');
     return this.http.patch(
@@ -103,7 +102,6 @@ export class UserService {
   }
 
   patchUserDetails(username: string, data: UserDetail) {
-    console.log(JSON.stringify(data));
     let headers = new HttpHeaders();
     headers = headers.set('content-type', 'application/json');
     return this.http.patch(
@@ -118,4 +116,16 @@ export class UserService {
       }));
   }
 
+  deleteUser(username: string) {
+    return this.http.delete(
+      this.API_URL + "/api/users/" + username
+    )
+    .pipe(map((response: any) => {
+      return response;
+    }))
+    .pipe(catchError(error => {
+      console.log(error);
+      throw error;
+    }))
+  }
 }
