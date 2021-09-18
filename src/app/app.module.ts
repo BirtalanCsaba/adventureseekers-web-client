@@ -30,6 +30,7 @@ import { AddsComponent } from './components/account/settings/adds/adds.component
 import { SupportComponent } from './components/account/settings/support/support.component';
 import { JwtModule } from "@auth0/angular-jwt";
 import { TokenHelper } from './services/local-storage/token.helper';
+import { ToggleButtonComponent } from './components/shared-components/controls/toggle-button/toggle-button.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { TokenHelper } from './services/local-storage/token.helper';
     LanguageComponent,
     SupportComponent,
     MyAccountComponent,
+    ToggleButtonComponent,
   ],
   imports: [
     BrowserModule,
