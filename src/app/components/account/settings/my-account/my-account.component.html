@@ -10,29 +10,6 @@
                     (ngSubmit)="saveSettings()">
                     <div class="text-end card-text">*is required</div>
                     <div class="mb-3">
-                        <label for="inputEmail" class="form-label">Email*</label>
-                        <input
-                            formControlName="email" 
-                            type="email" 
-                            class="form-control" 
-                            id="inputEmail"
-                            [ngClass]="{
-                                'is-invalid': email?.touched && email?.invalid
-                            }">
-                        <div 
-                            *ngIf="email?.invalid" 
-                            class="invalid-feedback">
-                            <div *ngIf="email?.errors?.required">Email is required</div>
-                            <div *ngIf="email?.errors?.email">Must be a valid email</div>
-                            <div *ngIf="email?.errors?.cannotContainSpace">
-                                Email should not contain spaces
-                            </div>
-                            <div *ngIf="email?.errors?.shouldBeUnique">
-                                Email already exists
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
                         <label for="inputUsername" class="form-label">Username*</label>
                         <input
                             formControlName="username" 
