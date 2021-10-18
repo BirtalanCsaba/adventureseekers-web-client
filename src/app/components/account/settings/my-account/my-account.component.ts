@@ -181,7 +181,6 @@ export class MyAccountComponent implements OnInit {
       this.initialUserDetail.City = this.city?.value;
       needUpdate = true;
     }
-    console.log("da");
 
     if (needUpdate) {
       // validate email and username: should be unique

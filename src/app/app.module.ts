@@ -30,6 +30,9 @@ import { AddsComponent } from './components/account/settings/adds/adds.component
 import { SupportComponent } from './components/account/settings/support/support.component';
 import { JwtModule } from "@auth0/angular-jwt";
 import { TokenHelper } from './services/local-storage/token.helper';
+import { ToggleButtonComponent } from './components/shared-components/controls/toggle-button/toggle-button.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -49,6 +52,7 @@ import { TokenHelper } from './services/local-storage/token.helper';
     LanguageComponent,
     SupportComponent,
     MyAccountComponent,
+    ToggleButtonComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,6 +60,7 @@ import { TokenHelper } from './services/local-storage/token.helper';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgbTooltipModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: TokenHelper.getAccessToken,
@@ -117,6 +122,7 @@ import { TokenHelper } from './services/local-storage/token.helper';
       },
       { path: '**', component: ErrorPageComponent },
     ]),
+    FontAwesomeModule,
     
   ],
   providers: [
