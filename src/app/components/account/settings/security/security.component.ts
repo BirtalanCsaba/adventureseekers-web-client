@@ -15,6 +15,7 @@ export class SecurityComponent implements OnInit {
 
   currentEmail : String | undefined;
 
+
   changeEmailForm = new FormGroup({
     email: new FormControl('', 
     [
@@ -56,7 +57,6 @@ export class SecurityComponent implements OnInit {
             console.log(theUser);
             this.userService.patchUser(this.authService.currentUser.sub, theUser)
               .subscribe(response => {
-                this.currentEmail = theUser.Email;
                 this.toastrService.showSuccess("Email changed", "Adventure Seekers");
               });
           }

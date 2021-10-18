@@ -71,13 +71,15 @@ export class UserService {
   }
 
   getUserDetails(username: string) {
-    return this.http.get(this.API_URL + "/api/users/details/" + username)
+    return this.http.get(
+      this.API_URL + "/api/users/details/" + username)
     .pipe(map((response: any) => {
       let theUserDetails = new UserDetail();
       theUserDetails.Description = response.description;
       theUserDetails.Country = response.country;
       theUserDetails.County = response.county;
       theUserDetails.City = response.city;
+      theUserDetails.ProfileImage = response.profileImage;
       return theUserDetails;
     }))
     .pipe(catchError(error => {

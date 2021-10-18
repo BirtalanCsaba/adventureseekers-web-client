@@ -31,6 +31,8 @@ import { SupportComponent } from './components/account/settings/support/support.
 import { JwtModule } from "@auth0/angular-jwt";
 import { TokenHelper } from './services/local-storage/token.helper';
 import { ToggleButtonComponent } from './components/shared-components/controls/toggle-button/toggle-button.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -58,6 +60,7 @@ import { ToggleButtonComponent } from './components/shared-components/controls/t
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgbTooltipModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: TokenHelper.getAccessToken,
@@ -119,6 +122,7 @@ import { ToggleButtonComponent } from './components/shared-components/controls/t
       },
       { path: '**', component: ErrorPageComponent },
     ]),
+    FontAwesomeModule,
     
   ],
   providers: [
